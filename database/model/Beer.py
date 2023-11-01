@@ -9,13 +9,13 @@ class Beer(database.BASE):
 
     __tablename__ = "beer"
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(255))
+    beer_id = Column("beer_id", Integer, primary_key=True, autoincrement=True)
+    name = Column(String(255), unique=True, nullable=False)
     alcohol_content = Column(Float)
     description = Column(String)
-    price = Column(Float)
+    price = Column(Float, nullable=False)
 
-    clients = relationship("Clients", back_populates="beer")
+    clients = relationship("Sales", back_populates="beer")
 
     def __init__(
         self, name: str, alcohol_content: float, description: str, price: float
