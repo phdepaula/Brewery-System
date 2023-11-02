@@ -3,7 +3,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import relationship
 
-from database.Settings import database
+from resources.settings.Database import database
 
 
 class Sales(database.BASE):

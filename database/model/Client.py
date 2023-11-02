@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from database.Settings import database
+from resources.settings.Database import database
 
 
 class Client(database.BASE):

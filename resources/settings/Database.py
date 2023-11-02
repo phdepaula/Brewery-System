@@ -1,4 +1,4 @@
-from database.model.Database import Database
+from database.Database import Database
 
 HOST = "localhost:5432"
 DATABASE_NAME = "Brewery"
