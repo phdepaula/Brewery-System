@@ -15,7 +15,7 @@ class Beer(database.BASE):
     description = Column(String)
     price = Column(Float, nullable=False)
 
-    clients = relationship("Sales", back_populates="beer")
+    sales = relationship("Sales", back_populates="beer")
 
     def __init__(
         self, name: str, alcohol_content: float, description: str, price: float
