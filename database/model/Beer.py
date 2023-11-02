@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from sqlalchemy import Column, Float, Integer, String
 from sqlalchemy.orm import relationship
 
@@ -21,6 +23,6 @@ class Beer(database.BASE):
         self, name: str, alcohol_content: float, description: str, price: float
     ):
         self.name = name
-        self.alcohol_content = float("{:.2%}".format(alcohol_content))
+        self.alcohol_content = Decimal(alcohol_content)
         self.description = description
-        self.price = float("{:.2%}".format(price))
+        self.price = Decimal(price)

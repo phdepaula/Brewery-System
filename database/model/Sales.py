@@ -1,6 +1,7 @@
-from sqlalchemy import (
-    Column, DateTime, Float, ForeignKey, Integer, String, func
-)
+from decimal import Decimal
+
+from sqlalchemy import (Column, DateTime, Float, ForeignKey, Integer, String,
+                        func)
 from sqlalchemy.orm import relationship
 
 from resources.settings.Database import database
@@ -23,8 +24,7 @@ class Sales(database.BASE):
     client = relationship("Client", back_populates="sales")
 
     def __init__(
-        self,
-        name: str,
+        self, name: str,
         quantity: int,
         price: float,
         beer_id: int,
@@ -32,6 +32,6 @@ class Sales(database.BASE):
     ):
         self.name = name
         self.quantity = quantity
-        self.price = float("{:.2%}".format(price))
+        self.price = Decimal(price)
         self.beer_id = beer_id
         self.client_id = client_id
