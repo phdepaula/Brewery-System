@@ -1,27 +1,6 @@
-from typing import Dict
-
 from pydantic import BaseModel
 
 from database.model.Beer import Beer
-
-
-class BeerSchema(BaseModel):
-    """
-    Defines how the API response should be \
-    for a successfully completed query for a beer.
-    """
-
-    message: str
-    beer: Dict
-
-
-class MessageSchema(BaseModel):
-    """
-    Defines how the API response should be \
-    when you want to send just one message.
-    """
-
-    message: str
 
 
 class AddBeerSchema(BaseModel):
@@ -34,6 +13,25 @@ class AddBeerSchema(BaseModel):
     alcohol_content: float
     description: str
     price: float
+
+
+class DeleteBeerSchema(BaseModel):
+    """
+    Defines how the delete structure \
+    in the beer database should be.
+    """
+
+    name: str
+
+
+class UpdateBeerSchema(BaseModel):
+    """
+    Defines how the update structure \
+    in the beer database should be.
+    """
+
+    name: str
+    new_value: str
 
 
 def format_beer_data(beer: Beer) -> dict:
