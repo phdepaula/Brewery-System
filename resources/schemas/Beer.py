@@ -36,7 +36,7 @@ class UpdateBeerSchema(BaseModel):
 
 def format_beer_data(beer: Beer) -> dict:
     """
-    Format the API response for a added product.
+    Format the API response for a added beer.
     """
     beer_data = {
         "name": beer.name,
