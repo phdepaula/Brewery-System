@@ -1,10 +1,9 @@
-from typing import Any, Dict, Union
-
 from fastapi import HTTPException
 
 from database.model.Beer import Beer
-from resources.schemas.Beer import (AddBeerSchema, BeerSchema, MessageSchema,
-                                    format_beer_data)
+from database.model.Sales import Sales
+from resources.schemas.Beer import (AddBeerSchema, DeleteBeerSchema,
+                                    UpdateBeerSchema, format_beer_data)
 from resources.settings.App import app
 from resources.util.TableHandler import TableHandler
 
@@ -12,15 +11,8 @@ from resources.util.TableHandler import TableHandler
 @app.get(
     "/get_beer/{name}",
     tags=["Beer"],
-    response_model=BeerSchema,
-    responses={
-        200: {"model": BeerSchema},
-        400: {"model": MessageSchema},
-    },
 )
-def get_beer(name: str) -> Union[
-    Dict[str, str], Dict[str, Union[str, Dict[str, Any]]]
-]:
+def get_beer(name: str) -> dict:
     """Route to get all the data for a specific beer."""
     try:
         beer_data = TableHandler().select_data_table(
@@ -44,15 +36,8 @@ def get_beer(name: str) -> Union[
 @app.post(
     "/add_beer",
     tags=["Beer"],
-    response_model=BeerSchema,
-    responses={
-        200: {"model": BeerSchema},
-        400: {"model": MessageSchema},
-    },
 )
-def add_beer(
-    form: AddBeerSchema,
-) -> Union[Dict[str, str], Dict[str, Union[str, Dict[str, Any]]]]:
+def add_beer(form: AddBeerSchema) -> dict:
     """Route to add a beer in the database."""
 
     name = (form.name).strip().title()
@@ -67,11 +52,11 @@ def add_beer(
         if price == 0:
             raise Exception("The price must be greater than zero.")
 
-        registered_product = TableHandler().select_value_table_parameter(
+        registered_beer = TableHandler().select_value_table_parameter(
             column=Beer.name, filter_select={Beer.name: name}
         )
 
-        if len(registered_product) > 0:
+        if len(registered_beer) > 0:
             raise Exception("Beer already registered.")
 
         new_beer = Beer(
@@ -84,6 +69,87 @@ def add_beer(
         message = f"The beer {name} was added."
 
         TableHandler().insert_data_table(new_beer)
+
+        response = {"message": message, "beer": beer_data_json}
+        return response
+    except Exception as error:
+        raise HTTPException(status_code=400, detail=str(error))
+
+
+@app.delete(
+    "/delete_beer",
+    tags=["Beer"],
+)
+def delete_beer(form: DeleteBeerSchema) -> dict:
+    """Route to delete a beer in the database."""
+    name = (form.name).strip().title()
+
+    try:
+        if len(name) == 0:
+            raise Exception("A name must be provided.")
+
+        registered_beer = TableHandler().select_value_table_parameter(
+            column=Beer.name, filter_select={Beer.name: name}
+        )
+
+        if len(registered_beer) == 0:
+            raise Exception("Beer is not registered to be deleted.")
+
+        registered_sale = TableHandler().select_value_table_parameter(
+            column=Sales.name, filter_select={Sales.name: name}
+        )
+
+        if len(registered_sale) != 0:
+            raise Exception(
+                "Beer has already been sold, it is not possible to delete it."
+            )
+
+        TableHandler().delete_data_table(
+            table=Beer, filter_delete={Beer.name: name}
+        )
+
+        message = f"The beer {name} was deleted."
+        beer_data_json = {"name": name}
+
+        response = {"message": message, "beer": beer_data_json}
+        return response
+    except Exception as error:
+        raise HTTPException(status_code=400, detail=str(error))
+
+
+@app.put(
+    "/update_description_beer",
+    tags=["Beer"],
+)
+def update_beer(form: UpdateBeerSchema) -> dict:
+    """Route to update a beer in the database."""
+    name = (form.name).strip().title()
+    new_value = (form.new_value).strip().capitalize()
+
+    try:
+        if len(name) == 0:
+            raise Exception("A name must be provided.")
+
+        registered_beer = TableHandler().select_value_table_parameter(
+            column=Beer.name, filter_select={Beer.name: name}
+        )
+
+        if len(registered_beer) == 0:
+            raise Exception("Beer is not registered to be updated.")
+
+        old_value = TableHandler().select_value_table_parameter(
+            column=Beer.description, filter_select={Beer.name: name}
+        )
+        message = f"The beer {name} was updated."
+        beer_data_json = {
+            "name": name, "old_value": old_value, "new_value": new_value
+        }
+
+        TableHandler().update_data_table(
+            table=Beer,
+            filter_update={Beer.name: name},
+            new_data={Beer.description: new_value},
+        )
 
         response = {"message": message, "beer": beer_data_json}
         return response
