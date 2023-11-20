@@ -7,7 +7,7 @@ Project responsible for managing the sales system of a brewery.
 * [PostgreSQL](https://www.postgresql.org/docs/) - Database
 
 ##  📋 Prerequisites
-Make sure you have PostgreSQL(https://www.postgresql.org/download/) installed on your machine.
+Make sure you have [PostgreSQL](https://www.postgresql.org/download/) installed on your machine.
 
 ## ▶️ How to run
 
