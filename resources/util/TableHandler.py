@@ -36,7 +36,7 @@ class TableHandler(Database):
         try:
             desired_filter = self._create_filter(filter_select)
             data = self._session.query(table).filter(*desired_filter).all()
-            data_fixed = "" if data is None else data
+            data_fixed = "" if data is None or len(data) == 0 else data
         except Exception as error:
             data_fixed = error
             raise error
