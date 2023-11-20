@@ -1,4 +1,4 @@
-# 🍺 Brewery-System
+# 🍺 Brewery System
 Project responsible for managing the sales system of a brewery.
 
 ## 🛠️ Built With
