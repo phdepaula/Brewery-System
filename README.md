@@ -14,7 +14,7 @@ Make sure you have [PostgreSQL](https://www.postgresql.org/download/) installed 
 First, install the libraries by running the following command.
 
 ```
-pip install ./lib/requirements.txt
+pip install -r ./lib/requirements.txt
 ```
 
 To start the application, simply run via terminal:
